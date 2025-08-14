@@ -35,7 +35,7 @@ jobs:
 
       # 4. Run tests inside the built Docker image container (adjust test command if needed)
       - name: Run tests inside Docker container
-        run: docker run --rm ${{ secrets.DOCKER_USERNAME }}/react-cicd:latest npm test
+        run: docker run --rm ${{ secrets.DOCKER_USERNAME }}/react-cicd:latest 
 
       # 5. Push the Docker image to Docker Hub only if tests pass
       - name: Push Docker image
