@@ -13,8 +13,8 @@ RUN npm install
 # Copier tout le reste du code
 COPY . .
 
-# Run tests before building
-RUN npm test
+# Run tests with verbose output
+RUN npm test -- --logLevel=verbose || { echo "Tests failed"; exit 1; }
 
 # Build de l'application pour production
 RUN npm run build
