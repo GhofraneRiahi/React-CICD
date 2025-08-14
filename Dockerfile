@@ -13,6 +13,9 @@ RUN npm install
 # Copier tout le reste du code
 COPY . .
 
+# Run tests before building
+RUN npm test
+
 # Build de l'application pour production
 RUN npm run build
 

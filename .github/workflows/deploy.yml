@@ -29,37 +29,33 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      # 3. Build Docker image (builds your app inside container as per Dockerfile)
+      # 3. Build Docker image (includes tests as per Dockerfile)
       - name: Build Docker image
         run: docker build -t ${{ secrets.DOCKER_USERNAME }}/react-cicd:latest .
 
-      # 4. Run tests inside the built Docker image container (adjust test command if needed)
-      - name: Run tests inside Docker container
-        run: docker run --rm ${{ secrets.DOCKER_USERNAME }}/react-cicd:latest npm test
-
-      # 5. Push the Docker image to Docker Hub only if tests pass
+      # 4. Push the Docker image to Docker Hub
       - name: Push Docker image
         run: docker push ${{ secrets.DOCKER_USERNAME }}/react-cicd:latest
 
-      # 6. Create a container from the image to extract the built static files (/app/dist)
+      # 5. Create a container from the image to extract the built static files (/app/dist)
       - name: Create container to extract build output
         id: create_container
         run: |
           container_id=$(docker create ${{ secrets.DOCKER_USERNAME }}/react-cicd:latest)
           echo "container_id=$container_id" >> $GITHUB_OUTPUT
 
-      # 7. Copy the static build files from container to the runner
+      # 6. Copy the static build files from container to the runner
       - name: Copy build files from container
         run: |
           mkdir -p dist
           docker cp ${{ steps.create_container.outputs.container_id }}:/app/dist ./dist
 
-      # 8. Remove the temporary container used for copying files
+      # 7. Remove the temporary container used for copying files
       - name: Remove temporary container
         if: always()
         run: docker rm ${{ steps.create_container.outputs.container_id }} || true
 
-      # 9. Deploy the extracted static site to GitHub Pages
+      # 8. Deploy the extracted static site to GitHub Pages
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
