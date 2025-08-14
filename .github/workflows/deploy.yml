@@ -50,7 +50,7 @@ jobs:
       - name: Copy build files from container
         run: |
           mkdir -p dist
-          docker cp ${{ steps.create_container.outputs.container_id }}:/app/dist ./dist
+          docker cp ${{ steps.create_container.outputs.container_id }}:/REACT-CICD-GITHUB/dist ./dist
 
       # 7. Remove the temporary container used for copying files
       - name: Remove temporary container
